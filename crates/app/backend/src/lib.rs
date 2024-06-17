@@ -34,13 +34,18 @@ pub async fn run() -> anyhow::Result<()> {
     let satg: Arc<dyn StatsAccessTokenGenerator> = load_jwt_from_env("STATS_ACCESS_TOKEN_KEY", "STATS_ACCESS_TOKEN_LIFETIME_SECS")?;
     let srtg: Arc<dyn RefreshTokenGenerator> = load_jwt_from_env("STATS_REFRESH_TOKEN_KEY", "STATS_REFRESH_TOKEN_LIFETIME_SECS")?;
 
+    let db = SqlxDb::connect(&get_env("DATABASE_URL")).await?;
+    sqlx::migrate!("./migrations")
+        .run(db.0.as_ref())
+        .await?;
+
     let address = get_env("BACKEND_ADDR");
     log::info!("starting server at address http://{address}");
     axum::serve(
         TcpListener::bind(address).await?, 
         Router::new()
             .nest("/api", api::router())
-            .layer(Extension(Arc::new(SqlxDb::connect(&get_env("DATABASE_URL")).await?)))
+            .layer(Extension(Arc::new(db)))
             .layer(Extension(Arc::new(GetSessionInfoService {
                 atg: patg.clone(),
             })))
