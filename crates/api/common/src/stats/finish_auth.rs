@@ -2,7 +2,11 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use crate::result::ApiResult;
 
-pub type  StatsFinishAuthApiError = ();
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum StatsFinishAuthApiError {
+    ClientNotExists
+}
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]

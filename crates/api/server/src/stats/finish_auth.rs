@@ -1,7 +1,8 @@
 use std::sync::Arc;
 
 use api_common::result::ApiResult;
-use common::stats::finish_auth::{StatsFinishAuthApiRequest, StatsFinishAuthApiResponse, StatsFinishAuthApiResult};
+use common::stats::finish_auth::{StatsFinishAuthApiError, StatsFinishAuthApiRequest, StatsFinishAuthApiResponse, StatsFinishAuthApiResult};
+use feature_clients::domain::repo::ClientsRepo;
 use feature_systems::domain::repo::SystemsRepo;
 
 use crate::tokens_pair::update_access_token;
@@ -13,11 +14,13 @@ pub struct StatsFinishAuthService {
 }
 
 impl StatsFinishAuthService {
-    pub async fn finish_auth(&self, repo: &mut dyn SystemsRepo, system_name: String, access_token: String, request: StatsFinishAuthApiRequest) -> StatsFinishAuthApiResult {
+    pub async fn finish_auth<T: SystemsRepo + ClientsRepo>(&self, repo: &mut T, system_name: String, access_token: String, request: StatsFinishAuthApiRequest) -> StatsFinishAuthApiResult {
         if !repo.name_exists(&system_name).await? {
             return ApiResult::Unauthorized;
         }
-        
+        if !repo.client_exists(request.client_id).await? {
+            return ApiResult::Error(StatsFinishAuthApiError::ClientNotExists);
+        }
         match update_access_token(async |ati: &mut StatsAccessTokenInfo| {
             if ati.system != ati.system { 
                 return Ok(false);
