@@ -8,19 +8,19 @@ use crate::stats::shared::access_token::StatsAccessTokenClaims;
 
 use super::shared::access_token::StatsAccessTokenGenerator;
 
-pub struct StatsGetSessionInfoService {
+pub struct StatsGetActiveSessionInfoService {
     pub atg: Arc<dyn StatsAccessTokenGenerator>
 }
 
-impl StatsGetSessionInfoService {
-    pub async fn get_session_info<T: SystemsRepo + ClientsRepo>(&self, repo: &mut T, access_token: String) -> StatsGetSessionInfoApiResult {
+impl StatsGetActiveSessionInfoService {
+    pub async fn get_active_session_info<T: SystemsRepo + ClientsRepo>(&self, repo: &mut T, access_token: String) -> StatsGetSessionInfoApiResult {
         let claims: StatsAccessTokenClaims = if let Ok(Ok(claims)) = self.atg.verify(access_token) {
             claims
         } else {
             return ApiResult::Unauthorized;
         };
 
-        if !SystemsRepo::name_exists(repo, &claims.info.system).await? {
+        if !SystemsRepo::active_name_exists(repo, &claims.info.system).await? {
             return ApiResult::Unauthorized;
         }
 

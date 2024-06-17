@@ -18,7 +18,7 @@ impl PatchOwnedSystemService {
         if !repo.try_patch(&name, owner_id, SystemPatch {
                 human_name: request.human_name,
                 active: request.active,
-                secret: request.secret,
+                secret: if request.change_secret { Some(request.secret) } else { None },
             }).await? {
                 return ApiResult::Forbidden;
             }

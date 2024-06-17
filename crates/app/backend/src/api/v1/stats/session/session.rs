@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use abstract_sqlx_bindings::SqlxDb;
-use api_server::{common::stats::get_session_info::StatsGetSessionInfoApiResult, stats::get_session_info::StatsGetSessionInfoService};
+use api_server::{common::stats::get_session_info::StatsGetSessionInfoApiResult, stats::get_session_info::StatsGetActiveSessionInfoService};
 use axum::{async_trait, extract::FromRequestParts, http::request::Parts, response::Response, Extension, RequestPartsExt};
 use uuid::Uuid;
 
@@ -28,9 +28,9 @@ impl<S> FromRequestParts<S> for StatsSession {
         let access_token = parts.headers.get("Authorization").and_then(|value| value.to_str().ok().and_then(|value| value.split_once(' ').and_then(|(token_type, token)| if token_type == "Bearer" {
             Some(token.to_owned()) } else { None }))).ok_or_else(unauthorized_error)?;
 
-        let Extension(service) = parts.extract::<Extension<Arc<StatsGetSessionInfoService>>>().await.map_err(internal_error_arg)?;
+        let Extension(service) = parts.extract::<Extension<Arc<StatsGetActiveSessionInfoService>>>().await.map_err(internal_error_arg)?;
         let Extension(db) = parts.extract::<Extension<Arc<SqlxDb>>>().await.map_err(internal_error_arg)?;
-        let result = api_result_transactional!(db, |tx| service.get_session_info(tx, access_token.clone()));
+        let result = api_result_transactional!(db, |tx| service.get_active_session_info(tx, access_token.clone()));
         match result {
             StatsGetSessionInfoApiResult::Success(session) => Ok(StatsSession {
                 token: access_token,

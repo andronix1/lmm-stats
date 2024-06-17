@@ -6,7 +6,8 @@ use crate::{tokens::TokensPair, result::ApiResult};
 pub enum StatsAuthApiError {
     InvalidSystem,
     InvalidAuthType,
-    InvalidSecret
+    InvalidSecret,
+    StatsNotActive
 }
 
 #[derive(Serialize, Deserialize)]

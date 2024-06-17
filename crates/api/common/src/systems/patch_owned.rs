@@ -17,7 +17,9 @@ pub struct PatchOwnedSystemApiRequest {
     #[serde(default)]
     pub active: Option<bool>,
     #[serde(default)]
-    pub secret: Option<Option<String>>,
+    pub secret: Option<String>,
+    #[serde(default)]
+    pub change_secret: bool
 }
 
 #[derive(Serialize, Deserialize)]

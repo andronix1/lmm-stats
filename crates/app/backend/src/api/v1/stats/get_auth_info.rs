@@ -11,5 +11,6 @@ pub async fn get(
 ) -> impl IntoResponse {
     api_transactional!(db, |tx| service.get_auth_info(tx, request), |err| match err {
         StatsGetAuthInfoApiError::InvalidSystem => StatusCode::NOT_FOUND,
+        StatsGetAuthInfoApiError::StatsNotActive => StatusCode::FORBIDDEN,
     })
 }

@@ -6,7 +6,11 @@ pub struct StatsGetAuthInfoService;
 
 impl StatsGetAuthInfoService {
     pub async fn get_auth_info(&self, repo: &mut dyn SystemsRepo, request: StatsGetAuthInfoApiRequest) -> StatsGetAuthInfoApiResult {
-        if !repo.name_exists(&request.system).await? {
+        if let Some(active) = repo.try_get_active_status(&request.system).await? {
+            if !active {
+                return ApiResult::Error(StatsGetAuthInfoApiError::StatsNotActive);
+            }
+        } else {
             return ApiResult::Error(StatsGetAuthInfoApiError::InvalidSystem);
         }
         ApiResult::Success(StatsGetAuthInfoApiResponse {

@@ -107,4 +107,18 @@ impl SystemsRepo for SqlxTransaction<'_> {
             .await?.has_secret == Some(true)
         )
     }
+
+    async fn active_name_exists(&mut self, name: &str) -> anyhow::Result<bool> {
+        Ok(sqlx::query!("select count(*) from systems where name = $1 and active", name)
+            .fetch_one(self.as_conn())
+            .await?.count == Some(1)
+        )
+    }
+
+    async fn try_get_active_status(&mut self, name: &str) -> anyhow::Result<Option<bool>> {
+        Ok(sqlx::query!("select active from systems where name = $1", name)
+            .fetch_optional(self.as_conn())
+            .await?.map(|e| e.active)
+        )
+    }
 }

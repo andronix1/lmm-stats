@@ -5,7 +5,8 @@ use super::StatsAuthType;
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub enum StatsGetAuthInfoApiError {
-    InvalidSystem
+    InvalidSystem,
+    StatsNotActive
 }
 
 #[derive(Serialize, Deserialize)]

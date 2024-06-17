@@ -42,14 +42,27 @@ pub async fn get(
     Path(query): Path<GetRequestQuery>
 ) -> Response { render_page(tera, requester, session, Context::new(), query.name).await }
 
+#[derive(Deserialize)]
+#[serde(rename_all="camelCase")]
+pub struct PatchSystemRequest {
+    human_name: String,
+    active: bool,
+    secret: Option<String>,
+}   
+
 pub async fn post(
     Extension(tera): Extension<Arc<Tera>>,
     Extension(requester): Extension<Arc<ApiRequester>>,
     mut session: Session,
     Path(query): Path<GetRequestQuery>,
-    Form(request): Form<PatchOwnedSystemApiRequest>
+    Form(request): Form<PatchSystemRequest>
 ) -> Response { 
-    let result: PatchOwnedSystemApiResult = requester.request(Method::PATCH, &format!("/api/v1/systems/my/{}", query.name), Some(&mut session), |builder| builder.json(&request)).await;
+    let result: PatchOwnedSystemApiResult = requester.request(Method::PATCH, &format!("/api/v1/systems/my/{}", query.name), Some(&mut session), move |builder| builder.json(&PatchOwnedSystemApiRequest {
+        human_name: Some(request.human_name.clone()),
+        active: Some(request.active),
+        secret: request.secret.clone(),
+        change_secret: true
+    })).await;
     ApiResultWrapper(result).respond_async(
         |_ok| async { Redirect::to("/panel/systems").into_response() },
         |err| async move {

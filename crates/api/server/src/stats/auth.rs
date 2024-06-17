@@ -13,7 +13,11 @@ pub struct StatsAuthService {
 
 impl StatsAuthService {
     pub async fn auth(&self, repo: &mut dyn SystemsRepo, system_name: String, request: StatsAuthApiRequest) -> StatsAuthApiResult {
-        if !repo.name_exists(&system_name).await? {
+        if let Some(active) = repo.try_get_active_status(&system_name).await? {
+            if !active {
+                return ApiResult::Error(StatsAuthApiError::StatsNotActive);
+            }
+        } else {
             return ApiResult::Error(StatsAuthApiError::InvalidSystem);
         }
         let system_secret = repo.get_secret(&system_name).await?;

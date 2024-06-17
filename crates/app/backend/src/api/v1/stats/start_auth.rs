@@ -14,5 +14,6 @@ pub async fn post(
     api_transactional!(db, |tx| service.auth(tx, scope.system, request), |err| match err {
         StatsAuthApiError::InvalidSystem => StatusCode::NOT_FOUND,
         StatsAuthApiError::InvalidAuthType | StatsAuthApiError::InvalidSecret => StatusCode::BAD_REQUEST,
+        StatsAuthApiError::StatsNotActive => StatusCode::FORBIDDEN,
     })
 }
