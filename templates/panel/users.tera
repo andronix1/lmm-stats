@@ -1,0 +1,11 @@
+{% extends "panel/base.tera" %}
+
+{% block setup_header %}
+    {% set page = "users" %}
+{% endblock setup_header %}
+
+{% block title %} Администраторы {% endblock title %}
+
+{% block content %}
+    <p>В РАЗРАБОТКЕ</p>
+{% endblock content %}

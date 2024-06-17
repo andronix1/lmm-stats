@@ -1,0 +1,11 @@
+[package]
+name = "feature-systems"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.86"
+async-trait = "0.1.80"
+uuid = "1.8.0"
+abstract-sqlx-bindings = "0.1.0"
+sqlx = { version = "0.7.4", features = ["postgres", "runtime-tokio", "uuid"] }

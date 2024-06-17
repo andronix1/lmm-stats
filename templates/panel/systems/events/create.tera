@@ -1,0 +1,48 @@
+{% extends "panel/base.tera" %}
+
+{% block setup_header %}
+    {% set_global page = "systems" %}
+{% endblock setup_header %}
+
+{% block title %} Системы {% endblock title %}
+
+{% block head %}
+    {{ super() }}
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        #content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+{% endblock head %}
+
+{% block content %}
+    <form method="post">
+        <h1 class="mb-4">Создайте событие</h1>
+
+        <div class="mb-3">
+            <input name="humanName" class="form-control" placeholder='Название (например: "Вошел в систему")'>
+            <small class="form-text text-muted">Нужно для отображения в системе сбора статистики</small>
+        </div>
+
+        <div class="mb-3">
+            <input name="name" class="form-control" placeholder="ID (например: loginedIn)">
+            <small class="form-text text-muted">Нужен для обращения к API</small>
+        </div>
+
+        {% if error %}
+            {% if error == "nameNotUnique" %}
+                <p>Событие с таким ID уже существует!</p>
+            {% elif error == "humanNameNotUnique" %}
+                <p>Событие с таким названием уже существует!</p>
+            {% endif %}
+        {% endif %}
+
+        <button class="btn btn-primary w-100 py-2" type="submit">Создать</button>
+    </form>
+{% endblock content %}

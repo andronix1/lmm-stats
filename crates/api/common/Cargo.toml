@@ -1,0 +1,16 @@
+[package]
+name = "api-common"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+async-trait = "0.1.80"
+serde = { version = "1.0.203", features = ["derive"] }
+log = "0.4.21"
+anyhow = "1.0.86"
+uuid = { version = "1.8.0", features = ["serde"] }
+feature-users = { version = "0.1.0", optional = true }
+linked-hash-map = { version = "0.5.6", features = ["serde_impl"] }
+
+[features]
+user-role-map = ["feature-users"]

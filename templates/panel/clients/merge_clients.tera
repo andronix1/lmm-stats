@@ -1,0 +1,87 @@
+{% extends "panel/base.tera" %}
+
+{% block setup_header %}
+    {% set page = "clients" %}
+{% endblock setup_header %}
+
+{% block title %} Добавить пользователей {% endblock title %}
+
+{% block content %}
+    <template id="item">
+        <input id="clients-input" name="clients" class="btn btn-primary mt-3" type="hidden"/>
+        <p id="client-name" class="mb-0"></p>
+        <button id="delete-client-button" class="btn btn-danger">Удалить</button>
+    </template>
+
+    <div class="container w-100 text-center">
+        <h3>Добавить пользователей в группу</h3>
+        <small class="text-muted">Здесь вы можете добавить список пользователей в группу. Если пользователь с таким же именем есть в другой группе, то он перемещается в эту группу</small>
+        <form class="mt-3 card p-3">
+            <div id="items" class="d-flex flex-column gap-3">
+                <span id="empty-list">Список пуст! Добавьте пользователей в список!</span>
+            </div>
+            <input class="btn btn-primary mt-3" type="submit" value="Завершить"/>
+        </form>
+
+        <div class="mt-3 w-100 text-center input-group">
+            <input id="list-add-input" class="form-control" placeholder="ФИО1, ФИО2, ФИО3"/>
+            <button id="list-add" type="submit" class="btn btn-primary">Добавить в список</button>
+        </div>
+    </div>
+    <script>
+        const listAddInput = document.getElementById("list-add-input");
+        const list = document.getElementById("items");
+        const emptyList = document.getElementById("empty-list");
+        const template = document.getElementById("item").innerHTML;
+
+        document.getElementById("list-add").onclick = (e) => {
+            e.preventDefault();
+            let names = listAddInput.value.split(',').map((e) => e.trim());
+            for (let name of names) {
+                if ((name.match(/ /g) || []).length > 2) {
+                    alert(`Кажется, вы ввели что-то неправильно! Найдено больше двух пробелов в имени "${name}"`);
+                    return;
+                }
+            }
+            if (names) {
+                emptyList.style.display = "none";
+            }
+            for (let name of names) {
+                let element = document.createElement('div');
+                element.className = 'client-card d-flex flex-row align-items-center justify-content-between p-3 card w-100';
+                element.innerHTML = template;
+                element.querySelector("#client-name").textContent = name;
+                element.querySelector("#clients-input").value = name;
+                element.querySelector("#delete-client-button").onclick = (e) => {
+                    e.preventDefault();
+                    element.remove();
+                    if (list.getElementsByClassName("client-card").length == 0) {
+                        emptyList.style.display = "inline";
+                    }
+                };
+                list.append(element);
+            }
+            listAddInput.value = "";
+        }
+        document.forms[0].onsubmit = (e) => {
+            e.preventDefault();
+            let names = [];
+            document.forms[0].querySelectorAll("#client-name").forEach((e) => names.push(e.textContent.trim()));
+            fetch("./merge-clients", {
+                method: "POST",
+                redirect: "follow",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(names)
+            }).then((response) => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    alert("Неизвестная ошибка!!!");
+                    console.error(response);
+                }
+            })
+        }
+    </script>
+{% endblock content %}

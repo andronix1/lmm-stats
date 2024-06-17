@@ -1,0 +1,11 @@
+[package]
+name = "feature-users"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+abstract-sqlx-bindings = "0.1.0"
+anyhow = "1.0.86"
+async-trait = "0.1.80"
+sqlx = { version = "0.7.4", features = ["postgres", "runtime-tokio", "uuid"] }
+uuid = "1.8.0"

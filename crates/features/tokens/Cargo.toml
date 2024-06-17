@@ -1,0 +1,10 @@
+[package]
+name = "feature-tokens"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.86"
+derive-new = "0.6.0"
+jwt-simple = "0.12.9"
+serde = "1.0.203"

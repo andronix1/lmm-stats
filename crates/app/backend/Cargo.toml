@@ -1,0 +1,21 @@
+[package]
+name = "backend"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.86"
+axum = { version = "0.7.5", features = ["macros"] }
+dotenv = "0.15.0"
+tokio = "1.38.0"
+derive-new = "0.6.0"
+log = "0.4.21"
+uuid = "1.8.0"
+serde = { version = "1.0.203", features = ["derive"] }
+env_logger = "0.11.3"
+
+feature-users = "0.1.0"
+feature-tokens = "0.1.0"
+api-server = "0.1.0"
+abstract-db = "0.1.0"
+abstract-sqlx-bindings = "0.1.0"

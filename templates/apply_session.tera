@@ -1,0 +1,12 @@
+{% extends "layout/base.tera" %}
+
+{% block title %}Redirecting...{% endblock title %}
+
+{% block body %} 
+    <script>
+        const redirectUrl = "{{ redirect_url }}";
+        const refreshToken = "{{ refresh_token }}";
+        localStorage.setItem("refreshToken", refreshToken);
+        window.location.href = redirectUrl;
+    </script>
+{% endblock body %} 

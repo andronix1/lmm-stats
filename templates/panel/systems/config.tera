@@ -1,0 +1,82 @@
+{% extends "panel/base.tera" %}
+
+{% block setup_header %}
+    {% set_global page = "systems" %}
+{% endblock setup_header %}
+
+{% block title %} Системы {% endblock title %}
+
+{% block head %}
+    {{ super() }}
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        #content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+{% endblock head %}
+
+{% block content %}
+    <form method="post">
+        <h1>Настройки {{ system.humanName }}</h1>
+        <p class="text-muted mb-4">ID системы: {{ systemName }}</p>
+
+        <div class="mb-3">
+            <input name="humanName" class="form-control" placeholder="Название (например: EDSRM)" value="{{ system.humanName }}">
+            <small class="form-text text-muted">Нужно для отображения в системе сбора статистики</small>
+        </div>
+
+        <div class="mb-3">
+            <div class="input-group justify-content-center">
+                <div class="input-group-text flex-grow-1">
+                    <span>Активен ли сбор данных?</span>
+                </div>
+                <div class="input-group-text">
+                    <input name="active" id="activeInput" type="hidden" value='{% if system.active %}true{% else %}false{% endif %}'/>
+                    <input id="activeSwitch" class="form-check-input mt-0" type="checkbox" role="switch" {% if system.active %} checked {% endif %}/>
+                </div>
+            </div>
+            <small class="form-text text-muted">В случае деактивации будет выдаваться ошибка</small>
+        </div>
+
+        <div class="mb-3">
+            <div class="input-group">
+                <div class="input-group-text">
+                    <input id="secretSwitch" class="form-check-input mt-0" type="checkbox" role="switch" {% if system.secret %} checked {% endif %} />
+                </div>
+                <input id="secretInput" name="secret" class="form-control" placeholder="Секретное слово" {% if not system.secret %} disabled {% else %} value="{{ system.secret }}" {% endif %}>
+            </div>
+            <small class="form-text text-muted">Нужно для аутентификации</small>
+        </div>
+
+        {% if error %}
+            {% if error == "nameNotUnique" %}
+                <p>Система с таким ID уже существует!</p>
+            {% elif error == "humanNameNotUnique" %}
+                <p>Система с таким названием уже существует!</p>
+            {% endif %}
+        {% endif %}
+
+        <button class="btn btn-primary w-100 py-2" type="submit">Применить</button>
+    </form>
+    <script>
+        const secretInput = document.getElementById("secretInput");
+        document.getElementById("secretSwitch").onchange = (e) => {
+            if (e.target.checked) {
+                secretInput.removeAttribute("disabled");
+            } else {
+                secretInput.value = "";
+                secretInput.setAttribute("disabled", undefined);
+            }
+        };
+        const activeInput = document.getElementById("activeInput");
+        document.getElementById("activeSwitch").onchange = (e) => {
+            activeInput.value = e.target.checked ? "true" : "false";
+        };
+    </script>
+{% endblock content %}

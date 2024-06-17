@@ -1,0 +1,68 @@
+{% extends "panel/base.tera" %}
+
+{% block setup_header %}
+    {% set_global page = "systems" %}
+{% endblock setup_header %}
+
+{% block title %} Системы {% endblock title %}
+
+{% block head %}
+    {{ super() }}
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        #content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+{% endblock head %}
+
+{% block content %}
+    <form method="post">
+        <h1 class="mb-4">Создайте систему</h1>
+
+        <div class="mb-3">
+            <input name="humanName" class="form-control" placeholder="Название (например: EDSRM)">
+            <small class="form-text text-muted">Нужно для отображения в системе сбора статистики</small>
+        </div>
+
+        <div class="mb-3">
+            <input name="name" class="form-control" placeholder="ID (например: edsrm-dev)">
+            <small class="form-text text-muted">Нужен для обращения к API</small>
+        </div>
+
+        <div class="mb-3">
+            <div class="input-group">
+                <div class="input-group-text">
+                    <input id="secretSwitch" class="form-check-input mt-0" type="checkbox" role="switch" />
+                </div>
+                <input id="secretInput" name="secret" class="form-control" placeholder="Секретное слово" disabled>
+            </div>
+            <small class="form-text text-muted">Нужно для аутентификации</small>
+        </div>
+
+        {% if error %}
+            {% if error == "nameNotUnique" %}
+                <p>Система с таким ID уже существует!</p>
+            {% elif error == "humanNameNotUnique" %}
+                <p>Система с таким названием уже существует!</p>
+            {% endif %}
+        {% endif %}
+
+        <button class="btn btn-primary w-100 py-2" type="submit">Создать</button>
+    </form>
+    <script>
+        const secretInput = document.getElementById("secretInput");
+        document.getElementById("secretSwitch").onchange = (e) => {
+            if (e.target.checked) {
+                secretInput.removeAttribute("disabled");
+            } else {
+                secretInput.setAttribute("disabled", undefined);
+            }
+        };
+    </script>
+{% endblock content %}

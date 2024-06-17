@@ -1,0 +1,59 @@
+{% extends "layout/page.tera" %}
+
+{% block title %} Вход {% endblock title %} 
+
+{% block head %}
+    {{ super() }}
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        form {
+            max-width: 500px;
+        }
+
+        #login-field {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        #password-field {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-top-width: 0;
+        }
+    </style>
+{% endblock head %} 
+
+{% block body %} 
+    {{ super() }}
+
+    <form method="post">
+        <h1 class="mb-4">Войдите в аккаунт</h1>
+
+        <div class="form-floating">
+            <input id="login-field" name="login" class="form-control" placeholder="Логин">
+            <label>Логин</label>
+        </div>
+
+        <div class="form-floating">
+            <input id="password-field" name="password" type="password" class="form-control mb-3" placeholder="Пароль">
+            <label>Пароль</label>
+        </div>
+
+        {% if error %}
+            {% if error == "invalidCredentials" %}
+                <p>Неверный логин или пароль!</p>
+            {% endif %}
+        {% endif %}
+
+        <button class="btn btn-primary w-100 py-2" type="submit">Войти</button>
+    </form>
+{% endblock body %}

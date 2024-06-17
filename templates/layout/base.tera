@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}{% endblock title %} - LMM Stats</title>
+        {% block head %} {% endblock head %}
+    </head>
+    <body {% block body_tag %} {% endblock body_tag %}>
+        {% block body %} {% endblock body %}
+    </body>
+</html>

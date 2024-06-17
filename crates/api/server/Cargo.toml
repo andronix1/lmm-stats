@@ -1,0 +1,17 @@
+[package]
+name = "api-server"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.86"
+api-common = { version = "0.1.0", features = ["user-role-map"] }
+feature-tokens = "0.1.0"
+feature-users = "0.1.0"
+feature-systems = "0.1.0"
+feature-clients = "0.1.0"
+feature-events = "0.1.0"
+feature-event-calls = "0.1.0"
+serde = { version = "1.0.203", features = ["derive"] }
+uuid = { version = "1.8.0", features = ["serde", "v4"] }
+linked-hash-map = { version = "0.5.6", features = ["serde_impl"] }

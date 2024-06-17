@@ -1,0 +1,28 @@
+{% extends "panel/base.tera" %}
+
+{% block setup_header %}
+    {% set_global page = "systems" %}
+{% endblock setup_header %}
+
+{% block title %} Системы {% endblock title %}
+
+{% block content %}
+    <div class="my-3 p-3 bg-body rounded shadow-sm">
+        <h6 class="border-bottom pb-2 mb-0">Ваши системы</h6>
+        {% for system in systems %}
+            <div class="d-flex align-items-center justify-content-between py-3 border-bottom w-100">
+                <p class="mb-0 small lh-sm text-body-secondary">
+                    <strong class="d-block text-gray-dark">{{ system.humanName }}</strong>
+                    {{ system.name }}
+                </p>
+                <div class="d-flex gap-3">
+                    <a class="btn btn-primary" href="./systems/my/{{system.name}}/events">События</a>
+                    <a class="btn btn-primary" href="./systems/my/{{system.name}}/config">Настройки</a>
+                </div>
+            </div>
+        {% endfor %}
+        <small class="d-block text-center mt-3">
+            <a href="./systems/create">Создать</a>
+        </small>
+    </div>
+{% endblock content %}

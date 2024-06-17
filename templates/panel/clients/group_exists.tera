@@ -1,0 +1,15 @@
+{% extends "panel/base.tera" %}
+
+{% block setup_header %}
+    {% set page = "clients" %}
+{% endblock setup_header %}
+
+{% block title %} Упс... {% endblock title %}
+
+{% block content %}
+    <div class="w-100 text-center">
+        <h3>Группа с таким названием уже существует!</h3>
+        <p>Попробуйте создать группу с другим названием</p>
+        <a class="btn btn-primary pill" href="{{redirectUrl}}">Ок</a>
+    </div>
+{% endblock content %}

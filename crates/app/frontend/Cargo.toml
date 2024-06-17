@@ -1,0 +1,20 @@
+[package]
+name = "frontend"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.86"
+axum = "0.7.5"
+derive-new = "0.6.0"
+dotenv = "0.15.0"
+env_logger = "0.11.3"
+log = "0.4.21"
+serde = { version = "1.0.203", features = ["derive"] }
+tera = "1.20.0"
+tokio = { version = "1.38.0", features = ["full"] }
+reqwest = { version = "0.12.4", features = ["json", "rustls-tls"], default-features = false }
+
+api-common = "0.1.0"
+tower-cookies = "0.10.0"
+uuid = { version = "1.8.0", features = ["serde"] }
