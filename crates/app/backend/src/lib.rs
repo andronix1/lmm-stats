@@ -35,7 +35,7 @@ pub async fn run() -> anyhow::Result<()> {
     let srtg: Arc<dyn RefreshTokenGenerator> = load_jwt_from_env("STATS_REFRESH_TOKEN_KEY", "STATS_REFRESH_TOKEN_LIFETIME_SECS")?;
 
     let db = SqlxDb::connect(&get_env("DATABASE_URL")).await?;
-    sqlx::migrate!("./migrations")
+    sqlx::migrate!("../../../migrations")
         .run(db.0.as_ref())
         .await?;
 

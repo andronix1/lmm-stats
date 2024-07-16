@@ -26,8 +26,8 @@ members = [
 ]
 
 [patch.crates-io]
-abstract-db = { path = "./abstract-db" }
-abstract-sqlx-bindings = { path = "./abstract-sqlx-bindings" }
+abstract-db = { git = "http://github.com/andronix1/abstract-db" }
+abstract-sqlx-bindings = { git = "http://github.com/andronix1/abstract-sqlx-bindings.git" }
 # features
 feature-tokens = { path = "crates/features/tokens" }
 feature-users = { path = "crates/features/users" }

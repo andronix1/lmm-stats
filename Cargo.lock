@@ -5,6 +5,7 @@ version = 3
 [[package]]
 name = "abstract-db"
 version = "0.1.0"
+source = "git+http://github.com/andronix1/abstract-db#2ec4d47006a0f3ee4e5c2457900074dd234fa4bb"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -13,6 +14,7 @@ dependencies = [
 [[package]]
 name = "abstract-sqlx-bindings"
 version = "0.1.0"
+source = "git+http://github.com/andronix1/abstract-sqlx-bindings.git#0c54577cda7d91e1e5acadd631c2b2d10e07913f"
 dependencies = [
  "abstract-db",
  "anyhow",
