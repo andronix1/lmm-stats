@@ -1,6 +1,0 @@
-[submodule "abstract-db"]
-	path = abstract-db
-	url = http://gitea.andronix1.ru/andronix1/abstract-db
-[submodule "abstract-sqlx-bindings"]
-	path = abstract-sqlx-bindings
-	url = http://gitea.andronix1.ru/andronix1/abstract-sqlx-bindings.git
