@@ -10,6 +10,7 @@ log = "0.4.21"
 anyhow = "1.0.86"
 uuid = { version = "1.8.0", features = ["serde"] }
 feature-users = { version = "0.1.0", optional = true }
+chrono = { version = "0.4.38", features = ["serde"] }
 linked-hash-map = { version = "0.5.6", features = ["serde_impl"] }
 
 [features]

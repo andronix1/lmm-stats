@@ -7,3 +7,5 @@ pub mod shared;
 pub mod get_events_of_owned;
 pub mod event_create;
 pub mod event_delete;
+pub mod set_active;
+pub mod list;

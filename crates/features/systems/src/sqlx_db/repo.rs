@@ -2,7 +2,7 @@ use abstract_sqlx_bindings::SqlxTransaction;
 use async_trait::async_trait;
 use uuid::Uuid;
 
-use crate::domain::{models::{CreateSystemInfo, FullSystemInfo, ShortSystemInfo, SystemPatch}, repo::SystemsRepo};
+use crate::domain::{models::{CreateSystemInfo, FullSystemInfo, ListSystemInfo, ShortSystemInfo, SystemPatch}, repo::SystemsRepo};
 
 #[async_trait]
 impl SystemsRepo for SqlxTransaction<'_> {
@@ -104,7 +104,7 @@ impl SystemsRepo for SqlxTransaction<'_> {
     async fn has_secret(&mut self, name: &str) -> anyhow::Result<bool> {
         Ok(sqlx::query!("select secret is null as has_secret from systems where name = $1", name)
             .fetch_one(self.as_conn())
-            .await?.has_secret == Some(true)
+            .await?.has_secret == Some(false)
         )
     }
 
@@ -120,5 +120,26 @@ impl SystemsRepo for SqlxTransaction<'_> {
             .fetch_optional(self.as_conn())
             .await?.map(|e| e.active)
         )
+    }
+
+    async fn get_all(&mut self) -> anyhow::Result<Vec<ListSystemInfo>> {
+        Ok(sqlx::query_as!(ListSystemInfo, "select active, name, human_name, activated_at from systems")
+            .fetch_all(self.as_conn())
+            .await?
+        )
+    }
+
+    async fn try_set_active(&mut self, name: &str, active: bool) -> anyhow::Result<bool> {
+        Ok(sqlx::query!("update systems set active = $2 where name = $1", name, active)
+            .execute(self.as_conn())
+            .await?.rows_affected() != 0
+        )
+    }
+
+    async fn mark_activated(&mut self, name: &str) -> anyhow::Result<()> {
+        sqlx::query!("update systems set activated_at = now() where name = $1", name)
+            .execute(self.as_conn())
+            .await?;
+        Ok(())
     }
 }

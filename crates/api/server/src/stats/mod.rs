@@ -5,3 +5,4 @@ pub mod auth;
 pub mod shared;
 pub mod finish_auth;
 pub mod send_event;
+pub mod get_clients_who;

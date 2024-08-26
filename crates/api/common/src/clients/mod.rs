@@ -3,3 +3,4 @@ pub mod create_group;
 pub mod delete_group;
 pub mod delete_client;
 pub mod get_clients;
+pub mod get_groups;

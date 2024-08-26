@@ -22,6 +22,9 @@ impl PatchOwnedSystemService {
             }).await? {
                 return ApiResult::Forbidden;
             }
+        if request.active == Some(true) {
+            repo.mark_activated(&name).await?;
+        }
         ApiResult::Success(PatchOwnedSystemApiResponse)
     }
 }

@@ -12,11 +12,9 @@
             <div class="text-center">
                 <ul class="nav justify-content-center mb-md-0">
                     <li><a href="/panel/systems" class="nav-link px-2{% if page == 'systems' %} link-secondary{% endif %}">Системы</a></li>
-                    <li><a class="nav-link px-2{% if page == 'stats' %} link-secondary{% endif %}" disabled>Статистика*</a></li>
+                    <li><a href="/panel/stats"   class="nav-link px-2{% if page == 'stats' %}   link-secondary{% endif %}">Статистика</a></li>
                     <li><a href="/panel/clients" class="nav-link px-2{% if page == 'clients' %} link-secondary{% endif %}">Пользователи</a></li>
-                    <li><a class="nav-link px-2{% if page == 'users' %} link-secondary{% endif %}" disabled>Администраторы*</a></li>
                 </ul>
-                <small>* - в разработке</small>
             </div>
 
             <div class="col-md-3 text-end">

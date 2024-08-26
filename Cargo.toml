@@ -22,7 +22,6 @@ members = [
     "crates/app/frontend",
     "crates/api/common",
     "crates/api/server",
-    "crates/api/client",
 ]
 
 [patch.crates-io]
@@ -38,7 +37,6 @@ feature-event-calls = { path = "crates/features/event_calls" }
 # api
 api-common = { path = "crates/api/common" }
 api-server = { path = "crates/api/server" }
-api-client = { path = "crates/api/client" }
 # app
 backend = { path = "crates/app/backend" }
 frontend = { path = "crates/app/frontend" }

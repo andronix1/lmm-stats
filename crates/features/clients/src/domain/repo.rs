@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use uuid::Uuid;
 
-use super::models::FullGroup;
+use super::models::{FullGroup, GroupInfo};
 
 #[async_trait]
 pub trait ClientsRepo: Send + Sync {
@@ -13,4 +13,5 @@ pub trait ClientsRepo: Send + Sync {
     async fn get_full_groups(&mut self) -> anyhow::Result<Vec<FullGroup>>;
     async fn try_delete_group(&mut self, group_id: Uuid) -> anyhow::Result<bool>;
     async fn try_delete_client(&mut self, client_id: Uuid) -> anyhow::Result<bool>;
+    async fn get_groups(&mut self) -> anyhow::Result<Vec<GroupInfo>>;
 }

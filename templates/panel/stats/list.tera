@@ -1,0 +1,141 @@
+{% extends "panel/base.tera" %}
+
+{% block setup_header %}
+    {% set page = "stats" %}
+{% endblock setup_header %}
+
+{% block head %}
+    {{ super() }}
+    <script src="/js/moment.js"></script>
+{% endblock head %}
+
+{% block title %} Статистика {% endblock title %}
+
+{% block content %}
+    <div class="my-3 p-3 bg-body rounded shadow-sm">
+        <h6 class="border-bottom pb-2 mb-0">Доступные системы</h6>
+        {% for system in systems %}
+            <div class="d-flex align-items-center justify-content-between py-3 border-bottom w-100">
+                <div class="d-flex align-items-center">
+                    <p class="ms-3 mb-0 small lh-sm text-body-secondary">
+                        <strong class="d-block  text-body-secondary text-gray-dark">{{ system.humanName }}</strong>
+                        Активирована <span class="activated-at">{{ system.activatedAt }}</span>
+                    </p>
+                </div>
+                <div class="d-flex gap-3">
+                    {% if system.active %}
+                        <a class="btn btn-success" href="./stats/{{system.name}}/setActive?active=false">Дективировать</a>
+                    {% else %}
+                        <a class="btn btn-danger" href="./stats/{{system.name}}/setActive?active=true">Активировать</a>
+                    {% endif %}
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdown-{{ system.name }}" data-bs-toggle="dropdown" aria-expanded="false">
+                            Получить тех, кто...
+                        </button>
+                        <form action="./stats/{{ system.name }}" class="datetime-input-form select-actions dropdown-menu px-3 text-center" style="width: 400px" aria-labelledby="dropdown-{{ system.name }}">
+                            <input class="events" name="events" type="hidden" />
+                            <select class="form-select" multiple>
+                                {% for event in system.events %}
+                                    <option value="{{ event.name }}">{{ event.humanName }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="d-flex align-items-center mt-2">
+                                <span class="me-2">и из группы</span>
+                                <select name="groupId" class="form-select w-auto">
+                                    {% for group in groups %}
+                                        <option value="{{ group.id }}">{{ group.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="d-flex gap-2 mt-2">
+                                <div class="input-group w-50">
+                                    <div class="input-group-text">
+                                        <input id="after-activate" type="checkbox" />
+                                    </div>
+                                    <input id="after-input" type="datetime-local" initial="{{ system.activatedAt }}" class="form-control" disabled />
+                                </div>
+                                <div class="input-group w-50">
+                                    <div class="input-group-text">
+                                        <input id="before-activate" type="checkbox" />
+                                    </div>
+                                    <input id="before-input" type="datetime-local" class="form-control" disabled />
+                                </div>
+                            </div>
+                            <input id="after-output" name="after" type="hidden" value disabled />
+                            <input id="before-output" name="before" type="hidden" value disabled />
+                            <input type="submit" class="submit mt-2 btn btn-primary" value="Продолжить" disabled />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+        for (let e of document.getElementsByClassName("activated-at")) {
+            e.innerText = new Intl.DateTimeFormat("ru-RU", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            }).format(new Date(e.innerText));
+        }
+
+        for (let e of document.getElementsByClassName("select-actions")) {
+            let select = e.getElementsByTagName("select")[0];
+            select.onchange = (e) => {
+                let submit = e.target.parentElement.getElementsByClassName("submit")[0];
+                e.target.parentElement.getElementsByClassName("events")[0].value = Array.apply(null, e.target.options).filter((e) => e.selected).map((e) => e.value).join(' ');
+                if (e.target.value) {
+                    submit.removeAttribute("disabled");
+                } else {
+                    submit.setAttribute("disabled", "");
+                }
+            };
+        }
+    </script>
+    <script>
+        function setupDateTimeInput(source, name) {
+            const output = source.querySelector(`#${name}-output`);
+            const input = source.querySelector(`#${name}-input`);
+            const activate = source.querySelector(`#${name}-activate`);
+            const dateTimeFormat = "YYYY-MM-DDTHH:mm:ss[Z]Z";
+            activate.onchange = (e) => {
+                if (e.target.checked) {
+                    input.removeAttribute("disabled");
+                    if (output.value) {
+                        output.removeAttribute("disabled");
+                    }
+                } else {
+                    input.setAttribute("disabled", "");
+                    output.setAttribute("disabled", "");
+                }
+            };
+            input.onchange = (e) => {
+                if (moment(e.target.value).isValid()) {
+                    output.removeAttribute("disabled");
+                    output.value = moment(e.target.value).format(dateTimeFormat);
+                } else {
+                    output.setAttribute("disabled", "");
+                }
+            }
+            const initial = input.getAttribute("initial");
+            if (initial) {
+                input.removeAttribute("disabled");
+                output.removeAttribute("disabled");
+                input.removeAttribute("initial");
+                const date = moment(initial).toDate()
+                date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+                input.setAttribute("value", date.toISOString().slice(0,16));
+                output.value = moment(initial).format(dateTimeFormat);
+                activate.checked = true;
+            }
+        }
+        Array.from(document.getElementsByClassName('datetime-input-form')).forEach((e) => {
+            let element = e;
+            setupDateTimeInput(element, 'after');
+            setupDateTimeInput(element, 'before');
+        });
+        
+    </script>
+{% endblock content %}

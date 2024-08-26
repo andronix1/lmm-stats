@@ -3,7 +3,7 @@
 use std::{env, sync::Arc};
 use abstract_sqlx_bindings::SqlxDb;
 use anyhow::anyhow;
-use api_server::{auth::{get_session_info::GetSessionInfoService, login::LoginService, refresh_session::RefreshSessionService, shared::access_token::AccessTokenGenerator}, clients::{create_group::CreateGroupService, delete_client::DeleteClientService, delete_group::DeleteGroupService, get_clients::GetClientsService, merge_clients::MergeClientsInGroupService}, stats::{auth::StatsAuthService, finish_auth::StatsFinishAuthService, get_auth_info::StatsGetAuthInfoService, get_session_info::StatsGetActiveSessionInfoService, refresh_session::StatsRefreshSessionService, send_event::StatsSendEventService, shared::access_token::StatsAccessTokenGenerator}, systems::{create::CreateSystemService, delete::DeleteSystemService, event_create::SystemEventCreateService, event_delete::SystemEventDeleteService, get_events_of_owned::GetEventsOfOwnedService, get_owned::GetOwnedSystemsService, get_owned_info::GetOwnedSystemInfoService, patch_owned::PatchOwnedSystemService}, tokens_pair::RefreshTokenGenerator, users::create_user::CreateUserService};
+use api_server::{auth::{get_session_info::GetSessionInfoService, login::LoginService, refresh_session::RefreshSessionService, shared::access_token::AccessTokenGenerator}, clients::{create_group::CreateGroupService, delete_client::DeleteClientService, delete_group::DeleteGroupService, get_clients::GetClientsService, get_groups::GetGroupsService, merge_clients::MergeClientsInGroupService}, stats::{auth::StatsAuthService, finish_auth::StatsFinishAuthService, get_auth_info::StatsGetAuthInfoService, get_clients_who::GetClientsWhoService, get_session_info::StatsGetActiveSessionInfoService, refresh_session::StatsRefreshSessionService, send_event::StatsSendEventService, shared::access_token::StatsAccessTokenGenerator}, systems::{create::CreateSystemService, delete::DeleteSystemService, event_create::SystemEventCreateService, event_delete::SystemEventDeleteService, get_events_of_owned::GetEventsOfOwnedService, get_owned::GetOwnedSystemsService, get_owned_info::GetOwnedSystemInfoService, list::GetSystemsListService, patch_owned::PatchOwnedSystemService, set_active::SetSystemActiveService}, tokens_pair::RefreshTokenGenerator, users::create_user::CreateUserService};
 use axum::{Extension, Router};
 use dotenv::dotenv;
 use feature_tokens::{jwt::{self, JwtTokenGenerator}, TokenGenerator};
@@ -61,6 +61,8 @@ pub async fn run() -> anyhow::Result<()> {
             .layer(Extension(Arc::new(GetOwnedSystemsService)))
             .layer(Extension(Arc::new(CreateSystemService)))
             .layer(Extension(Arc::new(DeleteSystemService)))
+            .layer(Extension(Arc::new(SetSystemActiveService)))
+            .layer(Extension(Arc::new(GetSystemsListService)))
             .layer(Extension(Arc::new(GetOwnedSystemInfoService)))
             .layer(Extension(Arc::new(PatchOwnedSystemService)))
             .layer(Extension(Arc::new(GetEventsOfOwnedService)))
@@ -68,8 +70,10 @@ pub async fn run() -> anyhow::Result<()> {
             .layer(Extension(Arc::new(SystemEventDeleteService)))
             .layer(Extension(Arc::new(GetClientsService)))
             .layer(Extension(Arc::new(CreateGroupService)))
+            .layer(Extension(Arc::new(GetGroupsService)))
             .layer(Extension(Arc::new(MergeClientsInGroupService)))
             .layer(Extension(Arc::new(DeleteClientService)))
+            .layer(Extension(Arc::new(GetClientsWhoService)))
             .layer(Extension(Arc::new(DeleteGroupService)))
             .layer(Extension(Arc::new(StatsAuthService {
                 atg: satg.clone(),

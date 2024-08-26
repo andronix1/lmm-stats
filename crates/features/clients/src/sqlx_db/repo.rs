@@ -2,7 +2,7 @@ use abstract_sqlx_bindings::SqlxTransaction;
 use async_trait::async_trait;
 use uuid::Uuid;
 
-use crate::domain::{models::{FullGroup, ClientInfo}, repo::ClientsRepo};
+use crate::domain::{models::{ClientInfo, FullGroup, GroupInfo}, repo::ClientsRepo};
 
 #[async_trait]
 impl ClientsRepo for SqlxTransaction<'_> {
@@ -67,6 +67,13 @@ impl ClientsRepo for SqlxTransaction<'_> {
         Ok(sqlx::query!("select count(*) from clients where id = $1", id)
             .fetch_one(self.as_conn())
             .await?.count == Some(1)
+        )
+    }
+
+    async fn get_groups(&mut self) -> anyhow::Result<Vec<GroupInfo>> {
+        Ok(sqlx::query_as!(GroupInfo, "select id, name from client_groups")
+            .fetch_all(self.as_conn())
+            .await?
         )
     }
 }

@@ -8,6 +8,7 @@ pub mod finish_auth;
 pub mod get_clients;
 pub mod send_event;
 pub mod session;
+pub mod get_clients_who;
 
 #[derive(Deserialize)]
 pub struct SystemScope {
@@ -20,6 +21,7 @@ pub fn router() -> Router {
         .route("/auth/start/:system", post(start_auth::post))
         .route("/auth/finish", post(finish_auth::post))
         .route("/auth/refresh", post(refresh_session::post))
+        .route("/system/:system/clients", post(get_clients_who::post))
         .route("/clients", get(get_clients::get))
         .route("/events", put(send_event::put))
 }

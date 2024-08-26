@@ -5,6 +5,7 @@ pub mod get_auth_info;
 pub mod refresh_session;
 pub mod send_event;
 pub mod finish_auth;
+pub mod get_clients_who;
 pub mod auth;
 
 #[derive(Serialize, Deserialize)]

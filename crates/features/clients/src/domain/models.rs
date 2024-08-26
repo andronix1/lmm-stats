@@ -10,3 +10,8 @@ pub struct FullGroup {
     pub name: String,
     pub clients: Vec<ClientInfo>
 }
+
+pub struct GroupInfo {
+    pub id: Uuid,
+    pub name: String,
+}

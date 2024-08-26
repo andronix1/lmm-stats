@@ -13,8 +13,8 @@ impl EventsRepo for SqlxTransaction<'_> {
         Ok(())
     }
 
-    async fn get_owned(&mut self, owner: Uuid) -> anyhow::Result<Vec<ShortEventInfo>> {
-        Ok(sqlx::query_as!(ShortEventInfo, "select events.name, events.human_name from events inner join systems on systems.name = events.system where systems.owner = $1", owner)
+    async fn get_of_system(&mut self, system: &str) -> anyhow::Result<Vec<ShortEventInfo>> {
+        Ok(sqlx::query_as!(ShortEventInfo, "select events.name, events.human_name from events inner join systems on systems.name = events.system where systems.name = $1", system)
             .fetch_all(self.as_conn())
             .await?
         )

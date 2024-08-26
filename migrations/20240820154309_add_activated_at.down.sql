@@ -1,0 +1,1 @@
+alter table systems drop column activated_at; 
